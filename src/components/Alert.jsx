@@ -12,7 +12,7 @@ export const Alert = (props) => {
   const [connection, setConnection] = useState();
   const [owner, setOwner] = useState('Owner');
   const [description, setDescription] = useState('Description');
-  const [contentState, setContentState] = useState('Notification');
+  const [contentState] = useState('Notification');
 
   const { instance } = useMsal();
   const { result} = useMsalAuthentication(InteractionType.Popup, {...loginRequest, account: instance.getActiveAccount() });
@@ -39,14 +39,6 @@ export const Alert = (props) => {
       });
       setConnection(conn);
   }, [result]);
-
-  const sendMessageToHub = (message) => {
-    if (connection.state === HubConnectionState.Connected) {
-        connection.invoke('SendClaimAssignmentToAssignee', 'Basit',message)
-                     .then(() => { })
-                     .catch((err) => { return console.error(err.toString());});
-    }
-  };
 
   const notificationView = (
     <ListGroupItem>
@@ -93,7 +85,7 @@ export const Alert = (props) => {
     <>
       <div className='data-area-div'>
         <ListGroup>
-          { (contentState == 'Notification')? notificationView : (contentState == 'Details')? claimDetailView : UnAvailableView }
+          { (contentState === 'Notification')? notificationView : (contentState === 'Details')? claimDetailView : UnAvailableView }
         </ListGroup>
       </div>
     </>
